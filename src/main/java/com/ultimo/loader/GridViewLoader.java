@@ -1,9 +1,8 @@
-package com.ultimo.listviewloader;
+package com.ultimo.loader;
 
 import android.content.Context;
 import android.os.Looper;
-import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import com.ultimo.formvalidation.HTTPLoader;
 
@@ -19,24 +18,24 @@ import java.util.List;
 /**
  * Created by vjprakash on 02/09/15.
  */
-public class Loader {
+public class GridViewLoader {
     private boolean hasMoreToLoad = true;
     private Context context;
     private boolean isPaginate;
     private String pageParamName;
     private String urlString;
-    private ListView listView;
+    private GridView gridView;
     private Class rIdClass;
     private String imageBaseURL;
     private int curPage = 1;
     private List<String[]> postParams;
-    private CustomListViewAdapter listViewAdapter;
-    public Loader(Context ctx){
+    private CustomGridViewAdapter gridViewAdapter;
+    public GridViewLoader(Context ctx){
         this.context = ctx;
     }
-    public void loadListViewFromURL(String urlString,String imageBaseURL,List<String[]> postParams,ListView listView,int itemLayout,
-                                    Class rIdClass,boolean isPaginate,String pageParamName) {
-        this.listView = listView;
+    public void loadFromURL(String urlString,String imageBaseURL,List<String[]> postParams,GridView gridView,int itemLayout,
+                            Class rIdClass,boolean isPaginate,String pageParamName) {
+        this.gridView = gridView;
         this.imageBaseURL = imageBaseURL;
         this.urlString = urlString;
         this.pageParamName = pageParamName;
@@ -44,14 +43,14 @@ public class Loader {
         this.rIdClass = rIdClass;
         this.postParams = postParams;
         List list = new ArrayList();
-        this.listViewAdapter = new CustomListViewAdapter(this.context,list,itemLayout,this.rIdClass,this.imageBaseURL,Loader.this);
-        this.listView.setAdapter(listViewAdapter);
+        this.gridViewAdapter = new CustomGridViewAdapter(this.context,list,itemLayout,this.rIdClass,this.imageBaseURL,GridViewLoader.this);
+        this.gridView.setAdapter(gridViewAdapter);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Looper.prepare();
-                    loadListViewNextPage();
+                    loadNextPage();
                     Looper.loop();
                 }catch (JSONException jsx){
                     jsx.printStackTrace();
@@ -60,7 +59,7 @@ public class Loader {
         });
         t.start();
     }
-    public void loadListViewNextPage() throws JSONException {
+    public void loadNextPage() throws JSONException {
         if (curPage == 1 && !this.isPaginate){
             if (postParams==null)
                 postParams = new ArrayList<String[]>();
@@ -77,7 +76,7 @@ public class Loader {
                 }
                 list.add(mapObj);
             }
-            this.listViewAdapter.addList(list);
+            this.gridViewAdapter.addList(list);
             curPage++;
         }
         else if (this.isPaginate && hasMoreToLoad){
@@ -102,8 +101,9 @@ public class Loader {
                 }
                 list.add(mapObj);
             }
-            this.listViewAdapter.addList(list);
+            this.gridViewAdapter.addList(list);
             curPage++;
         }
     }
 }
+

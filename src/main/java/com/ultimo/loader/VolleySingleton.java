@@ -1,4 +1,4 @@
-package com.ultimo.listviewloader;
+package com.ultimo.loader;
 
 /**
  * Created by vjprakash on 03/09/15.

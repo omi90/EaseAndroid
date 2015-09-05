@@ -1,4 +1,4 @@
-package com.ultimo.listviewloader;
+package com.ultimo.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,18 +15,13 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
-import com.ultimo.formvalidation.R;
 
 import org.json.JSONException;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by vjprakash on 02/09/15.
@@ -36,10 +31,10 @@ public class CustomListViewAdapter extends BaseAdapter{
     private List list;
     private Class aClass;
     private int errResId=0;
-    private Loader loader;
+    private ListViewLoader loader;
     private String imageBaseURL;
     private int baseLayoutId=0;
-    public CustomListViewAdapter(Context context,List list,int baseLayoutId,Class rIdClass,String imageBaseURL,Loader loader){
+    public CustomListViewAdapter(Context context,List list,int baseLayoutId,Class rIdClass,String imageBaseURL,ListViewLoader loader){
         this.context = context;
         this.list = list;
         this.baseLayoutId = baseLayoutId;
@@ -47,7 +42,7 @@ public class CustomListViewAdapter extends BaseAdapter{
         this.imageBaseURL = imageBaseURL;
         this.loader = loader;
     }
-    public CustomListViewAdapter(Context context,List list,int baseLayoutId,Class rIdClass,String imageBaseURL,Loader loader,int errorImageRes){
+    public CustomListViewAdapter(Context context,List list,int baseLayoutId,Class rIdClass,String imageBaseURL,ListViewLoader loader,int errorImageRes){
         this.context = context;
         this.list = list;
         this.baseLayoutId = baseLayoutId;
@@ -57,6 +52,14 @@ public class CustomListViewAdapter extends BaseAdapter{
         this.errResId = errorImageRes;
     }
 
+    public int getErrResId() {
+        return errResId;
+    }
+
+    public void setErrResId(int errResId) {
+        this.errResId = errResId;
+    }
+    
     @Override
     public int getCount() {
         return this.list.size();
@@ -123,7 +126,7 @@ public class CustomListViewAdapter extends BaseAdapter{
         }
         if (isReachedEnd(position))
             try {
-                this.loader.loadListViewNextPage();
+                this.loader.loadNextPage();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
