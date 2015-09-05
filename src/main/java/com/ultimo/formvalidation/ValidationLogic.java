@@ -16,7 +16,8 @@ class Constants{
 
     public static final String EMAIL_ERROR="Please enter a valid email";
     public static final String PHONE_ERROR="Please enter a valid phone no";
-    public static final String LENGTH_ERROR="Please enter a correct length value";
+    public static final String LENGTH1_ERROR="Please enter value greater than %n";
+    public static final String LENGTH2_ERROR="Please enter value greater than %n and less than %n";
     public static final String NUMBER_ERROR="Please enter a number";
     public static final String REGEX_ERROR="Please enter a correct pattern value";
 }
@@ -25,7 +26,7 @@ public class ValidationLogic {
     private static String phonePattern = "[0-9]{10}";
     public static String checkValidation(String stringToValidate,String validationPattern) throws ValidationTypeNotSupported {
         int nxtPos = validationPattern.indexOf("_");
-        String retMsg;
+        String retMsg="";
         boolean isValidated=false;
         String validationType = validationPattern;
         if (nxtPos > -1) {
@@ -41,17 +42,18 @@ public class ValidationLogic {
                 isValidated = stringToValidate.matches(phonePattern);
                 break;
             case Constants.LENGTH:
-                retMsg = Constants.LENGTH_ERROR;
                 String[] patvals = validationPattern.split("_");
                 if (patvals.length<2){
                     throw new ValidationTypeNotSupported();
                 }else if (patvals.length<3){
+                    retMsg = String.format(Constants.LENGTH1_ERROR,Integer.parseInt(patvals[1]));
                     if (stringToValidate.length()>=Integer.parseInt(patvals[1])){
                         isValidated = true;
                     }else {
                         isValidated = false;
                     }
                 }else if (patvals.length<4){
+                    retMsg = String.format(Constants.LENGTH2_ERROR,Integer.parseInt(patvals[1]),Integer.parseInt(patvals[2]));
                     if (stringToValidate.length()>=Integer.parseInt(patvals[1]) && stringToValidate.length()<=Integer.parseInt(patvals[2]) ){
                         isValidated = true;
                     }else {

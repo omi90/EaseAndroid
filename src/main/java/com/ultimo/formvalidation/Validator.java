@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class Validator {
     private Context context;
+    private boolean toStoreInSharedPred = false;
+
     public Validator(Context ctx){
         this.context = ctx;
     }
@@ -26,6 +28,13 @@ public class Validator {
         return mValidateInterface;
     }
 
+    public boolean isToStoreInSharedPred() {
+        return toStoreInSharedPred;
+    }
+
+    public void setToStoreInSharedPred(boolean toStoreInSharedPred) {
+        this.toStoreInSharedPred = toStoreInSharedPred;
+    }
     public void setmValidateInterface(ValidateInterface mValidateInterface) {
         this.mValidateInterface = mValidateInterface;
     }
@@ -37,6 +46,9 @@ public class Validator {
             @Override
             public void run() {
                 if (validateAllFields(viewGroup)){
+                    if (toStoreInSharedPred){
+                        storeInSharedPref();
+                    }
                     Log.i("Vijay", "Form Validated");
                     String response = HTTPLoader.loadContentFromURL(urlString, getURLPostVars());
                     mValidateInterface.isSubmitted(response);
@@ -151,7 +163,9 @@ public class Validator {
         }
         editor.commit();
     }
-    private void loadFromSharedPref(){
+    private void loadFromSharedPref(ViewGroup viewGroup){
+        findAllEdittexts(viewGroup);
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         for (int i = 0; i < array.size(); i++) {
             int key = array.keyAt(i);
