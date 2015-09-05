@@ -1,4 +1,60 @@
 # EaseAndroid
 This is an android library. 
 With this you can validate forms in android very ease, 
-also a listview can be loaded dynamically from url that returns json array.
+also a listview,gridview or form can be loaded dynamically from url that returns json array.
+
+
+#Validate and Submit a Form
+```
+Validator validator = new Validator(context);
+validator.setmValidateInterface(this);
+submit.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        validator.validateAndSubmit(formContainerView, "form_submit_url");
+    }
+});
+```
+
+1. Create an instance of Validator Class-:<br/>
+  ```
+    Validator validator = new Validator(context);
+  ```
+2. Set Validator Interface as current class Validator will return result at validation success or form submitted via interface-:<br/>
+  ```
+    validator.setmValidateInterface(this);
+  ```
+3. set onClickListener to form submit button and call validate and submit function with container view of form ex. LinearLayout or RelativeLayout-:
+  
+  ```
+      submit.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              validator.validateAndSubmit(formContainerView, "form_submit_url");
+          }
+      });
+  ```
+4. One More thing is to define validations in Layout XML, something like below-:
+  
+  ```
+    <EditText
+        android:id="@+id/lname"
+        android:tag="vs_length_3_10_ve_hts_lname_hte_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/phone"
+        android:tag="vs_phone_ve_hts_phone_hte_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/email"
+        android:tag="vs_email_ve_hts_email_hte_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+  ```
+  
+Validations and string for submitting value in post variable are defined in tag attribute.<br/>
+Validation String starts with vs_ and ends with _ve_ .<br/>
+Post Variable name starts with hts_ and ends with _hte_ .<br/>
+Currently supported validations are length check, phone, email, phone, number, regular expression.
