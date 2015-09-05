@@ -55,6 +55,7 @@ submit.setOnClickListener(new View.OnClickListener() {
   ```
   
 Validations and string for submitting value in post variable are defined in tag attribute.<br/>
-Validation String starts with vs_ and ends with _ve_ .<br/>
-Post Variable name starts with hts_ and ends with _hte_ .<br/>
-Currently supported validations are length check, phone, email, phone, number, regular expression.
+Validation String starts with *vs_* and ends with *_ve_* .<br/>
+Post Variable name starts with *hts_* and ends with *_hte_* .<br/>
+Currently supported validations are length check, email, phone, number, regular expression.
+Any Java Style Regular expression will work.
