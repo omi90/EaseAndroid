@@ -59,3 +59,12 @@ Validation String starts with *vs_* and ends with *_ve_* .<br/>
 Post Variable name starts with *hts_* and ends with *_hte_* .<br/>
 Currently supported validations are length check, email, phone, number, regular expression.
 Any Java Style Regular expression will work.
+
+#Loading a listview from URL
+
+Loading a listview is also quite easy.
+```
+ListViewLoader  listviewloader = new ListViewLoader(mContext);
+listviewloader.loadFromURL(urlString,imageBaseURL,postParams,listView,itemLayout,rIdClass,isPaginate,pageParamName);
+```
+Same can be done for GridView and Android layout forms.
