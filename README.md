@@ -67,4 +67,17 @@ Loading a listview is also quite easy.
 ListViewLoader  listviewloader = new ListViewLoader(mContext);
 listviewloader.loadFromURL(urlString,imageBaseURL,postParams,listView,itemLayout,rIdClass,isPaginate,pageParamName);
 ```
+
+Lets take all arguments one by one-<br/>
+
+<b>urlString</b> is url from where u will get json as array of items.<br/>
+<b>imageBaseURL</b> is base url or folder where images are store as default , ignore if using full image url path in json array.<br/>
+<b>postParams</b> is additional parameters to pass url if required otherwise null.<br/>
+<b>listView</b> is listview object of the layout.<br/>
+<b>itemLayout</b> is resource identifier of layout of row item of listview (ex. R.layout.row_item_view)<br/>
+<b>rIdClass</b> is class of your resource (R) class (ex. R.class)<br/>
+<b>isPaginate</b> is true if using pagination in sending json Array otherwise false.<br/>
+<b>pageParamName</b> is parameter name for telling on which page we are currently on, more content will be loaded automatically on reaching bottom of the page.<br/>
+
+
 Same can be done for GridView and Android layout forms.
