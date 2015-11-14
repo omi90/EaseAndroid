@@ -29,6 +29,10 @@ public class ListViewLoader {
     private String imageBaseURL;
     private int curPage = 1;
     private List<String[]> postParams;
+    private String jsonArrayName;
+    public void setArrayName(String jsonArrayName){
+        this.jsonArrayName = jsonArrayName;
+    }
     private CustomListViewAdapter listViewAdapter;
     public ListViewLoader(Context ctx){
         this.context = ctx;
@@ -63,7 +67,7 @@ public class ListViewLoader {
         if (curPage == 1 && !this.isPaginate){
             if (postParams==null)
                 postParams = new ArrayList<String[]>();
-            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams);
+            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams,context);
             List list = new ArrayList();
             JSONArray jsonArray = new JSONArray(response);
             for (int i =0;i<jsonArray.length();i++){
@@ -83,9 +87,15 @@ public class ListViewLoader {
             if (postParams==null)
                 postParams = new ArrayList<String[]>();
             postParams.add(new String[]{pageParamName, ""+this.curPage});
-            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams);
+            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams,context);
             List list = new ArrayList();
-            JSONArray jsonArray = new JSONArray(response);
+            JSONArray jsonArray = null;
+            if (jsonArrayName == null || jsonArrayName.equalsIgnoreCase("")){
+                jsonArray = new JSONArray(response);
+            }else {
+                JSONObject jsonObject = new JSONObject(response);
+                jsonArray = jsonObject.getJSONArray(jsonArrayName);
+            }
             if(jsonArray.length()==0){
                 hasMoreToLoad=false;
             }else {

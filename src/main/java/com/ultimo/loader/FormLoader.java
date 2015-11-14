@@ -50,7 +50,7 @@ public class FormLoader {
         this.urlString = urlString;
         this.imageBaseURL= imageBaseURL;
         this.errResId = errorImageRes;
-        String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams);
+        String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams,context);
         JSONObject jsonObject = new JSONObject(response);
         Iterator<String> itr = jsonObject.keys();
         while (itr.hasNext()){

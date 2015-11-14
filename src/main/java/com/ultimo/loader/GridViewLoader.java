@@ -63,7 +63,7 @@ public class GridViewLoader {
         if (curPage == 1 && !this.isPaginate){
             if (postParams==null)
                 postParams = new ArrayList<String[]>();
-            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams);
+            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams,context);
             List list = new ArrayList();
             JSONArray jsonArray = new JSONArray(response);
             for (int i =0;i<jsonArray.length();i++){
@@ -83,7 +83,7 @@ public class GridViewLoader {
             if (postParams==null)
                 postParams = new ArrayList<String[]>();
             postParams.add(new String[]{pageParamName, ""+this.curPage});
-            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams);
+            String response = HTTPLoader.loadContentFromURLGet(this.urlString, postParams,context);
             List list = new ArrayList();
             JSONArray jsonArray = new JSONArray(response);
             if(jsonArray.length()==0){

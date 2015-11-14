@@ -1,7 +1,10 @@
 package com.ultimo.formvalidation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
@@ -38,29 +41,69 @@ public class Validator {
     public void setmValidateInterface(ValidateInterface mValidateInterface) {
         this.mValidateInterface = mValidateInterface;
     }
+    class HolderClass{
+        private String url;
+        private List<String[]> params;
 
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public List<String[]> getParams() {
+            return params;
+        }
+
+        public void setParams(List<String[]> params) {
+            this.params = params;
+        }
+    }
+    class BackgroundTask extends AsyncTask<HolderClass,Void,String>{
+
+        @Override
+        protected String doInBackground(HolderClass... params) {
+            String response = HTTPLoader.loadContentFromURL(params[0].getUrl(), params[0].getParams(),context);
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+            mValidateInterface.isSubmitted(response);
+        }
+    }
     private ValidateInterface mValidateInterface;
 
-    public void validateAndSubmit(final ViewGroup viewGroup, final String urlString){
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (validateAllFields(viewGroup)){
-                    if (toStoreInSharedPred){
-                        storeInSharedPref();
-                    }
-                    Log.i("Vijay", "Form Validated");
-                    String response = HTTPLoader.loadContentFromURL(urlString, getURLPostVars());
-                    mValidateInterface.isSubmitted(response);
-                }else {
-                    mValidateInterface.isValidated(false);
-                }
+    public void validateAndSubmit(final ViewGroup viewGroup, final String urlString, final List<String[]> customPostVars){
+        if (validateAllFields(viewGroup)){
+            if (toStoreInSharedPred){
+                storeInSharedPref();
             }
-        });
-        t.start();
+            //Log.i("Vijay", "Form Validated");
+            mValidateInterface.isValidated(true);
+            HolderClass holderClass = new HolderClass();
+            holderClass.setUrl(urlString);
+            holderClass.setParams(getURLPostVars(customPostVars));
+            new BackgroundTask().execute(holderClass);
+        }else {
+            mValidateInterface.isValidated(false);
+        }
+    }
+    public void submit(final String urlString, final List<String[]> customPostVars){
+        if (toStoreInSharedPred){
+            storeInSharedPref();
+        }
+        HolderClass holderClass = new HolderClass();
+        holderClass.setUrl(urlString);
+        holderClass.setParams(customPostVars);
+        new BackgroundTask().execute(holderClass);
     }
     private SparseArray<View> array = new SparseArray<View>();
     public boolean validateAllFields(ViewGroup viewGroup){
+        array = new SparseArray<View>();
         findAllEdittexts(viewGroup);
 
         boolean formValidated = true;
@@ -118,8 +161,25 @@ public class Validator {
             }
         }
     }
-    private List<String[]> getURLPostVars() {
+    public void clearForm(ViewGroup viewGroup){
+        array = new SparseArray<View>();
+        findAllEdittexts(viewGroup);
+        for (int i=0;i<array.size();i++) {
+            int key = array.keyAt(i);
+            // get the object by the key.
+            Object obj = array.get(key);
+            View view = (View) obj;
+            if (view instanceof EditText) {
+                final EditText editText = (EditText) view;
+                editText.setText("");
+            }
+        }
+    }
+    private List<String[]> getURLPostVars(List<String[]> custom) {
         List<String[]> listOfParams = new ArrayList<String[]>();
+        if (custom!=null && custom.size()>0){
+            listOfParams.addAll(custom);
+        }
         for (int i = 0; i < array.size(); i++) {
             int key = array.keyAt(i);
             // get the object by the key.
@@ -131,7 +191,7 @@ public class Validator {
                 String value = editText.getEditableText().toString();
                 try {
                     String httpparam = tag.substring(tag.indexOf(Constants.HTTP_STR_START) + Constants.HTTP_STR_START.length(), tag.indexOf(Constants.HTTP_STR_END));
-                    listOfParams.add(new String[]{httpparam,value});
+                    listOfParams.add(new String[]{httpparam, value});
 
                 }catch (IndexOutOfBoundsException idxe){
 
