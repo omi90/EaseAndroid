@@ -75,7 +75,7 @@ Lets take all arguments one by one-<br/>
 <b>postParams</b> is additional parameters to pass url if required otherwise null.<br/>
 <b>listView</b> is listview object of the layout.<br/>
 <b>itemLayout</b> is resource identifier of layout of row item of listview (ex. R.layout.row_item_view)<br/>
-<b>rIdClass</b> is class of your resource (R) class (ex. R.class)<br/>
+<b>rIdClass</b> is class of your resource id (R.id) class (ex. R.id.class)<br/>
 <b>isPaginate</b> is true if using pagination in sending json Array otherwise false.<br/>
 <b>pageParamName</b> is parameter name for telling on which page we are currently on, more content will be loaded automatically on reaching bottom of the page.<br/>
 
